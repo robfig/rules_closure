@@ -63,6 +63,38 @@ closure_js_template_library(
     ],
 )
 
+closure_js_template_library(
+    name = "plugin_soy",
+    srcs = ["plugin.soy"],
+    plugin_modules = ["test.ExampleModule"],
+    plugin_module_deps = [":ExampleModule"],
+)
+
+java_library(
+    name = "ExampleModule",
+    srcs = ["ExampleModule.java"],
+    deps = [
+        "@com_google_guava//:com_google_guava",
+        "@com_google_inject_extensions_guice_multibindings//jar",
+        "@com_google_inject_guice//jar",
+        "@com_google_template_soy//jar",
+    ],
+)
+
+file_test(
+    name = "plugin_test_toUpper",
+    size = "small",
+    file = ":plugin.soy.js",
+    regexp = ".toUpperCase()",
+)
+
+file_test(
+    name = "plugin_test_toLower",
+    size = "small",
+    file = ":plugin.soy.js",
+    regexp = ".toLowerCase()",
+)
+
 file_test(
     name = "localized_using_defs_test",
     size = "small",

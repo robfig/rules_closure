@@ -47,6 +47,16 @@ def _impl(ctx):
         for f in dep.closure_js_library.descriptors.to_list():
             args += ["--protoFileDescriptors=%s" % f.path]
             inputs.append(f)
+
+    # plugin_modules - add required jars to inputs and build the classpath.
+    plugin_classpath = []
+    for dep in ctx.attr.plugin_module_deps:
+        for jar in dep[JavaInfo].transitive_runtime_deps.to_list():
+            plugin_classpath.append(jar.path)
+            inputs.append(jar)
+    if plugin_classpath:
+        args.insert(0, "--main_advice_classpath="+':'.join(plugin_classpath))
+
     ctx.actions.run(
         inputs = inputs,
         outputs = ctx.outputs.outputs,
@@ -69,7 +79,13 @@ _closure_js_template_library = rule(
         ),
         "outputs": attr.output_list(),
         "globals": attr.label(allow_single_file = True),
-        "plugin_modules": attr.label_list(),
+        "plugin_modules": attr.string_list(
+            doc = "fully-qualified names of extension classes",
+        ),
+        "plugin_module_deps": attr.label_list(
+            doc = "java_library rules providing the specified plugin_modules",
+            providers = [JavaInfo],
+        ),
         "should_generate_soy_msg_defs": attr.bool(),
         "bidi_global_dir": attr.int(default = 1, values = [1, -1]),
         "soy_msgs_are_external": attr.bool(),
@@ -86,6 +102,7 @@ def closure_js_template_library(
         testonly = None,
         globals = None,
         plugin_modules = None,
+        plugin_module_deps = None,
         should_generate_soy_msg_defs = None,
         bidi_global_dir = None,
         soy_msgs_are_external = None,
@@ -102,6 +119,7 @@ def closure_js_template_library(
         visibility = ["//visibility:private"],
         globals = globals,
         plugin_modules = plugin_modules,
+        plugin_module_deps = plugin_module_deps,
         should_generate_soy_msg_defs = should_generate_soy_msg_defs,
         bidi_global_dir = bidi_global_dir,
         soy_msgs_are_external = soy_msgs_are_external,
