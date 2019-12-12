@@ -18,6 +18,7 @@
  *     reports the result to phantomjs_runner.js.
  */
 
+console.log('setInterval');
 window.setInterval(function() {
   if (!window['G_testRunner']) {
     console.log('ERROR: G_testRunner not defined. ' +
@@ -25,7 +26,11 @@ window.setInterval(function() {
     window['callPhantom'](false);
     return;
   }
+  console.log('polling for success');
   if (window['G_testRunner'].isFinished()) {
+    console.log('reporting to phantom');
+    console.log(window['G_testRunner'].getReport());
     window['callPhantom'](window['G_testRunner'].isSuccess());
+    console.log('reported to phantom');
   }
-}, 200);
+}, 5000);

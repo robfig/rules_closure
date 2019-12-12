@@ -183,6 +183,7 @@ function onConsoleMessage(message, line, source) {
  * @param {string} status
  */
 function onLoadFinished(status) {
+  system.stderr.writeLine('-> onLoadFinished: ' + status);
   if (status != 'success') {
     system.stderr.writeLine('Load Failed: ' + status);
     retry();
@@ -195,6 +196,7 @@ function onLoadFinished(status) {
  * @param {string} message
  */
 function onAlert(message) {
+  system.stderr.writeLine('-> onAlert()');
   system.stderr.writeLine('Alert: ' + message);
 }
 
@@ -205,6 +207,7 @@ function onAlert(message) {
  * @param {!phantomjs.StackTrace} trace
  */
 function onError(message, trace) {
+  system.stderr.writeLine('-> onError()');
   system.stderr.writeLine(message);
   trace.forEach(function(t) {
     var msg = '> ';
@@ -224,6 +227,7 @@ function onError(message, trace) {
  * @param {boolean} succeeded
  */
 function onCallback(succeeded) {
+  system.stderr.writeLine('-> onCallback()');
   page.close();
   if (succeeded) {
     phantom.exit();
@@ -237,6 +241,7 @@ function onCallback(succeeded) {
  * Tries again if there was a suspicious failure.
  */
 function retry() {
+  system.stderr.writeLine('-> retry()');
   page.close();
   server.close();
   if (++flakes == 3) {
@@ -251,6 +256,8 @@ function retry() {
  * Attempts to run the test.
  */
 function main() {
+  system.stderr.writeLine('-> main()');
+
   // construct the web page
   var body = fs.read(system.args[1]);
   if (body.match(/^<!/)) {
@@ -292,7 +299,11 @@ function main() {
   //      https://github.com/ariya/phantomjs/issues/10652
   page.settings.resourceTimeout = 2000;
   page.open(url);
+
+  system.stderr.writeLine('<- main()');
 }
 
 
 main();
+
+system.stderr.writeLine('<- phantomjs_harness');
