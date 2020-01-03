@@ -87,7 +87,7 @@ phantomjs_test = rule(
         "data": attr.label_list(allow_files = True),
         "debug": attr.bool(
             doc = "Activate phantomjs debug logging",
-            default = False,
+            default = True,
         ),
         "_phantomjs": attr.label(
             default = Label("//third_party/phantomjs"),

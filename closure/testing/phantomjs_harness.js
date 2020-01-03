@@ -299,7 +299,7 @@ function main() {
 
   // XXX: If PhantomJS croaks, fail sooner rather than later.
   //      https://github.com/ariya/phantomjs/issues/10652
-  page.settings.resourceTimeout = 2000;
+  page.settings.resourceTimeout = 60000;
   page.open(url);
 }
 
