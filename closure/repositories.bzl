@@ -675,16 +675,16 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
-    version = "v20191027"
+    version = "v20200112"
     jar = "closure-compiler-unshaded-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
         licenses = ["reciprocal"],  # MPL v1.1 (Rhino AST), Apache 2.0 (JSCompiler)
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
-            "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
+            "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "cef8e02bcb2c6cdaef0e91b7b5259d819c30a3f070986ef14512491966763a2e",
+        jar_sha256 = "f98d518edf50f920c40d08bce188048469baff5e8e8d2ad0671eb7c530a68eed",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
@@ -741,27 +741,23 @@ def com_google_jsinterop_annotations():
 def com_google_protobuf():
     http_archive(
         name = "com_google_protobuf",
-        patches = [
-            "@io_bazel_rules_closure//closure:protobuf_drop_java_7_compatibility.patch",
-        ],
-        patch_args = ["-p1"],
-        strip_prefix = "protobuf-3.10.0",
-        sha256 = "758249b537abba2f21ebc2d02555bf080917f0f2f88f4cbe2903e0e28c4187ed",
+        strip_prefix = "protobuf-3.11.4",
+        sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.10.0.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.10.0.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.11.4.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz",
         ],
     )
 
 def com_google_protobuf_js():
     http_archive(
         name = "com_google_protobuf_js",
-        strip_prefix = "protobuf-3.10.0/js",
+        strip_prefix = "protobuf-3.11.4/js",
+        sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.10.0.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.10.0.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.11.4.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz",
         ],
-        sha256 = "758249b537abba2f21ebc2d02555bf080917f0f2f88f4cbe2903e0e28c4187ed",
         build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
     )
 
@@ -934,7 +930,7 @@ def org_apache_tomcat_annotations_api():
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
             "http://maven.ibiblio.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
-            "http://repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
+            "https://repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
         ],
         jar_sha256 = "748677bebb1651a313317dfd93e984ed8f8c9e345538fa8b0ab0cbb804631953",
     )

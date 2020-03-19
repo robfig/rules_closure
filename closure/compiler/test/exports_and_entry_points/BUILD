@@ -83,6 +83,10 @@ file_test(
 closure_js_library(
     name = "library_goog_lib",
     srcs = ["library_goog.js"],
+    suppress = [
+        "lintChecks",
+        "superfluousSuppress",
+    ],  # use of goog.provide
 )
 
 closure_js_binary(
@@ -104,7 +108,7 @@ file_test(
 
 closure_js_binary(
     name = "program_strict_bin",
-    dependency_mode = "STRICT",
+    dependency_mode = "PRUNE",
     entry_points = ["closure/compiler/test/empty"],
     deps = [
         ":program_lib",
@@ -120,7 +124,7 @@ file_test(
 
 closure_js_binary(
     name = "program_strict_bin2",
-    dependency_mode = "STRICT",
+    dependency_mode = "PRUNE",
     entry_points = ["closure/compiler/test/exports_and_entry_points/program"],
     deps = [
         ":program_lib",
