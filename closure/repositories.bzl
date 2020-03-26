@@ -18,22 +18,6 @@ load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 load("//closure/private:platform_http_file.bzl", "platform_http_file")
 
-_ERROR_CLOSURE_REPOSITORIES_IS_DEPRECATED = """
-closure_repositories() is deprecated.
-
-Please add the following to your workspace instead:
-
-  load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
-  rules_closure_dependencies()
-  rules_closure_toolchains()
-""".strip()
-
-def closure_repositories(**kargs):
-    """Legacy macro to import dependencies for Closure Rules."""
-
-    print(_ERROR_CLOSURE_REPOSITORIES_IS_DEPRECATED)
-    rules_closure_dependencies(**kargs)
-
 def rules_closure_toolchains():
     """An utility method to load all Closure toolchains.
 
@@ -70,7 +54,6 @@ def rules_closure_dependencies(
         omit_com_google_javascript_closure_library = False,
         omit_com_google_jsinterop_annotations = False,
         omit_com_google_protobuf = False,
-        omit_com_google_protobuf_java = False,
         omit_com_google_protobuf_js = False,
         omit_com_google_template_soy = False,
         omit_com_google_template_soy_jssrc = False,
@@ -98,8 +81,6 @@ def rules_closure_dependencies(
         omit_rules_python = False,
         omit_zlib = False):
     """Imports dependencies for Closure Rules."""
-    if omit_com_google_protobuf_java:
-        fail("omit_com_google_protobuf_java no longer supported and must be not be passed to closure_repositories()")
     if not omit_aopalliance:
         aopalliance()
     if not omit_args4j:
@@ -675,16 +656,16 @@ def com_google_java_format():
     )
 
 def com_google_javascript_closure_compiler():
-    version = "v20191027"
+    version = "v20200112"
     jar = "closure-compiler-unshaded-%s.jar" % version
     java_import_external(
         name = "com_google_javascript_closure_compiler",
         licenses = ["reciprocal"],  # MPL v1.1 (Rhino AST), Apache 2.0 (JSCompiler)
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
-            "http://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
+            "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler-unshaded/%s/%s" % (version, jar),
         ],
-        jar_sha256 = "cef8e02bcb2c6cdaef0e91b7b5259d819c30a3f070986ef14512491966763a2e",
+        jar_sha256 = "f98d518edf50f920c40d08bce188048469baff5e8e8d2ad0671eb7c530a68eed",
         deps = [
             "@com_google_code_gson",
             "@com_google_guava",
@@ -741,27 +722,23 @@ def com_google_jsinterop_annotations():
 def com_google_protobuf():
     http_archive(
         name = "com_google_protobuf",
-        patches = [
-            "@io_bazel_rules_closure//closure:protobuf_drop_java_7_compatibility.patch",
-        ],
-        patch_args = ["-p1"],
-        strip_prefix = "protobuf-3.10.0",
-        sha256 = "758249b537abba2f21ebc2d02555bf080917f0f2f88f4cbe2903e0e28c4187ed",
+        strip_prefix = "protobuf-3.11.4",
+        sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.10.0.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.10.0.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.11.4.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz",
         ],
     )
 
 def com_google_protobuf_js():
     http_archive(
         name = "com_google_protobuf_js",
-        strip_prefix = "protobuf-3.10.0/js",
+        strip_prefix = "protobuf-3.11.4/js",
+        sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
         urls = [
-            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.10.0.tar.gz",
-            "https://github.com/protocolbuffers/protobuf/archive/v3.10.0.tar.gz",
+            "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.11.4.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz",
         ],
-        sha256 = "758249b537abba2f21ebc2d02555bf080917f0f2f88f4cbe2903e0e28c4187ed",
         build_file = str(Label("//closure/protobuf:protobuf_js.BUILD")),
     )
 
@@ -934,7 +911,7 @@ def org_apache_tomcat_annotations_api():
         jar_urls = [
             "https://mirror.bazel.build/repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
             "http://maven.ibiblio.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
-            "http://repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
+            "https://repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/8.0.5/tomcat-annotations-api-8.0.5.jar",
         ],
         jar_sha256 = "748677bebb1651a313317dfd93e984ed8f8c9e345538fa8b0ab0cbb804631953",
     )
